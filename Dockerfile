@@ -1,8 +1,15 @@
-# Use the base image
-FROM fredblgr/ubuntu-novnc:20.04
+#!/bin/bash
 
-EXPOSE 80
+# Start DBus
+mkdir -p /var/run/dbus
+dbus-daemon --system --fork
 
-ENV RESOLUTION 1707x1067
+# Start SSH
+service ssh start
 
-CMD ["supervisord", "-c", "/etc/supervisor/supervisord.conf"]
+# Prepare X11 directory
+mkdir -p /tmp/.X11-unix
+chmod 1777 /tmp/.X11-unix
+
+# Start XRDP
+/usr/sbin/xrdp --nodaemon
